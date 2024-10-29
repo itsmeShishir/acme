@@ -110,3 +110,12 @@ class ContactCreateView(generics.CreateAPIView):
 class ContactDestroyView(generics.DestroyAPIView):
     queryset = Contact.objects.all()
     serializer_class = ContactUsSerializer
+
+#for order
+class OrderCreateView(generics.ListCreateAPIView):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+
+class OrderGetView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer

@@ -69,6 +69,7 @@ class Contact(models.Model):
         return f"{self.first_name} {self.last_name}"
 
 class Order(models.Model):
+    name = models.CharField(max_length=255)
     address = models.CharField(max_length=255)
     phone = models.IntegerField(default=0)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, blank=True)
@@ -92,12 +93,3 @@ class esewaPayment(models.Model):
 
     def __str__(self):
         return self.esewa_order_id
-
-class Cart(models.Model):
-    user = models.ForeignKey(CustomUsers, on_delete=models.CASCADE, null=True, blank=True)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, blank=True)
-    quantity = models.IntegerField(default=0)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.product.title

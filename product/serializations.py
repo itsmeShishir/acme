@@ -70,13 +70,36 @@ class ContactUsSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class OrderSerializer(serializers.ModelSerializer):
-    product = ProductSerialization(read_only=True)
+    product = serializers.PrimaryKeyRelatedField(queryset=Product.objects.all(), many=True)
+    user = serializers.SerializerMethodField(source='user.id')
+
     class Meta:
         model = Order
-        fields = '__all__'
-
+        fields = ['id','name', 'address', 'phone', 
+                  'product', 'quantity', 'user', 'orderStatus', 'created_at']
+        read_only_fields = ['orderStatus', 'created_at']
+    
+    def create (self, validated_data):
+        request = self.context.get('request')
+        validated_data['user'] = request.user
+        return super().create(validated_data)
+    
+    
 class EsewaPaymentSerializer(serializers.ModelSerializer):
-    order = OrderSerializer(read_only=True)
+    order = serializers.PrimaryKeyRelatedField(queryset=Order.objects.all(), many=True)
+    amount = serializers.FloatField()
+
     class Meta:
         model = esewaPayment
-        fields = '__all__'
+        fields = ['id', 'esewa_order_id', 'amount', 'order', 'status']
+
+    # to validate the the data from esewa payment https://uat.esewa.com.np/epay/transrec   {
+        #     'amt': 'amount', //total amount of service 
+        #     'scd': 'merchant_id', //merchant id
+        #     'rid': 'rid', //reference id provided by esewa
+        #     'pid':'"uniqueid', //unique id of the product
+        # }
+    def create(self, validated_data):
+        request = self.context.get('request')
+        validated_data['user'] = request.user
+        return super().create(validated_data)
