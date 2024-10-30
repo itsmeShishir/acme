@@ -19,4 +19,14 @@ urlpatterns = [
     path("contactus",ContactGetView.as_view(), name="contactus"),
     path("create/contactus",ContactCreateView.as_view(), name="contactus"),
     path("delete/contactus/<int:id>",ContactDestroyView.as_view(), name="contactus"),
+
+    #esewa
+    path("esewa/callback",EsewaCallBackView.as_view(), name="esewa-callback"),
+    path("esewa/payment",EsewaPaymentView.as_view(), name="esewa-Payment"),
+
+    #lOGOUT
+    path("logout",LogoutView.as_view(), name="logout"),
+
+    #Seach Product
+    path("search",SearchView.as_view(), name="search"),
 ]

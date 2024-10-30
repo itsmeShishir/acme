@@ -71,7 +71,7 @@ class ContactUsSerializer(serializers.ModelSerializer):
 
 class OrderSerializer(serializers.ModelSerializer):
     product = serializers.PrimaryKeyRelatedField(queryset=Product.objects.all(), many=True)
-    user = serializers.SerializerMethodField(source='user.id')
+    user = serializers.ReadOnlyField(source='user.id')
 
     class Meta:
         model = Order
@@ -86,20 +86,36 @@ class OrderSerializer(serializers.ModelSerializer):
     
     
 class EsewaPaymentSerializer(serializers.ModelSerializer):
-    order = serializers.PrimaryKeyRelatedField(queryset=Order.objects.all(), many=True)
-    amount = serializers.FloatField()
+    order_id = serializers.PrimaryKeyRelatedField(queryset=Order.objects.all(), many=True)
+    esewa_order_id = serializers.CharField(max_length=255)
+    amount = serializers.IntegerField()
 
     class Meta:
         model = esewaPayment
-        fields = ['id', 'esewa_order_id', 'amount', 'order', 'status']
+        fields = ['id', 'esewa_order_id', 'amount', 'order_id', 'status', 'created_at']
+        read_only_fields = ['status','created_at']
 
     # to validate the the data from esewa payment https://uat.esewa.com.np/epay/transrec   {
-        #     'amt': 'amount', //total amount of service 
-        #     'scd': 'merchant_id', //merchant id
-        #     'rid': 'rid', //reference id provided by esewa
-        #     'pid':'"uniqueid', //unique id of the product
-        # }
     def create(self, validated_data):
-        request = self.context.get('request')
-        validated_data['user'] = request.user
-        return super().create(validated_data)
+        payment = esewaPayment.objects.create(
+            esewa_order_id=validated_data['esewa_order_id'],
+            amount=validated_data['amount'],
+            order=validated_data['order_id'],
+            status = "Pending"
+        )
+        return payment
+from rest_framework_simplejwt.tokens import RefreshToken
+#LogOut
+class LogoutSerializer(serializers.Serializer):
+    refresh = serializers.CharField()
+    def validate(self, attrs):
+        self.token = attrs['refresh']
+        return attrs
+    
+    def save(self, **kwargs):
+        try:
+            refresh_token = RefreshToken(self.token)
+            refresh_token.blacklist()
+
+        except Exception as e:
+            self.fail('invalid_token')

@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
     "corsheaders",
 ]
 
@@ -152,6 +153,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOW_ALL_ORIGINS= True
 
+SIMPLE_JWT = {
+    'BLACKLIST_AFTER_ROTATION': True,
+    
+}
 
 JAZZMIN_SETTINGS = {
     # title of the window (Will default to current_admin_site.site_title if absent or None)
@@ -319,3 +324,9 @@ JAZZMIN_UI_TWEAKS = {
     },
     "actions_sticky_top": True
 }
+
+ESEWA_PAYMENT_URL = 'https://uat.esewa.com.np/epay/main'
+ESEWA_MERCHANT_ID = 'EPAYTEST'
+ESEWA_SECRET_KEY = 'hwIWQQADhIYSxILExMcAgFXFhcOBwAKBgAXEQ=='
+ESEWA_SUCCESS_URL = 'http://127.0.0.1:8000/esewa/success'
+ESEWA_FAILED_URL = 'http://127.0.0.1:8000/esewa/failed'
