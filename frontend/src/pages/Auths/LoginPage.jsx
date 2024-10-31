@@ -13,9 +13,10 @@ const LoginPage = () => {
         })
         .then((res) => {
             // set data in cookie js
-            // setCookie('sessionid', res.data.)
-            // setCookie('role', res.data.role)
-            // setCookie('email', res.data.email)
+            // setCookie('sessionid', res.data.sessionid)
+            localStorage.setItem('token', res.data.access)
+            localStorage.setItem('email', res.data.email)
+            localStorage.setItem('role', res.data.role)
             console.log(res.data.success)
         }).then((err) => {
             console.log(err)

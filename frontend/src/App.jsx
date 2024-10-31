@@ -10,23 +10,29 @@ import CartPage from './pages/UserFrontend/CartPage'
 import ContactPage from './pages/UserFrontend/ContactPage'
 import LoginPage from './pages/Auths/LoginPage'
 import RegisterPage from './pages/Auths/RegisterPage'
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
+
+const queryClient = new QueryClient();
+
 const App = () => {
   return (
-    <Routes>
-        <Route path='/' element={<FrontendMain />}>
-            <Route index element={<HomePage />} />
-            <Route path='category' element={<AllCategory />} />
-            <Route path='product' element={<AllProducts />} />
-            <Route path='singlecategory/:id' element={<AllCategoryProduct />} />
-            <Route path='singleProduct/:id' element={<SingleProduct />} />
-            <Route path='cart' element={<CartPage />} />
-            <Route path='contact' element={<ContactPage />} />
+    <QueryClientProvider client={queryClient}>
+        <Routes>
+          <Route path='/' element={<FrontendMain />}>
+              <Route index element={<HomePage />} />
+              <Route path='category' element={<AllCategory />} />
+              <Route path='product' element={<AllProducts />} />
+              <Route path='singlecategory/:id' element={<AllCategoryProduct />} />
+              <Route path='singleProduct/:id' element={<SingleProduct />} />
+              <Route path='cart' element={<CartPage />} />
+              <Route path='contact' element={<ContactPage />} />
 
-            {/* Auth */}
-            <Route path='login' element={<LoginPage />} />
-            <Route path='register' element={<RegisterPage />} />
-        </Route>
-    </Routes>
+              {/* Auth */}
+              <Route path='login' element={<LoginPage />} />
+              <Route path='register' element={<RegisterPage />} />
+          </Route>
+      </Routes>
+    </QueryClientProvider>
   )
 }
 
